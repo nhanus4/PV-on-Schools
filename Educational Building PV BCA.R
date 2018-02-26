@@ -25,7 +25,6 @@ install.packages("reshape2")
 install.packages("ggthemes")
 
 # add libraries
-
 library(lubridate)
 library(sp)  # classes for spatial data
 library(raster)  # grids, rasters
