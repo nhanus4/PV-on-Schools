@@ -1,9 +1,10 @@
 
-# Install packages & libraries
+# Install packages 
 install.packages("stringr")
 install.packages("xml2")
 install.packages("XML")
 
+# add libraries
 library(stringr)
 library(maps)
 library(mapproj)
