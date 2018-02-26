@@ -64,8 +64,6 @@ lbnl.r2.p1 <- read.csv(file = "C:/Users/hanusnil/Box Sync/TTSX_LBNL_OpenPV_publi
 lbnl.r2.p2 <- read.csv(file = "C:/Users/hanusnil/Box Sync/TTSX_LBNL_OpenPV_public_file_p2.csv", header = TRUE, sep = ",", stringsAsFactors=FALSE)
 lbnl <- rbind(lbnl.r2.p1,lbnl.r2.p2)
 
-
-
 # Read the shapes of the eGrid regions
 eGrid <- readOGR(dsn = "C:/Users/hanusnil/Box Sync/Regional Shapefiles", layer = "eGRIDshapes")
 
@@ -125,10 +123,6 @@ zip <- read.csv(file = "C:/Users/hanusnil/Box Sync/ZIP_COUNTY_062016.csv", heade
 deflator <- read.csv(file = "C:/Users/hanusnil/Box Sync/deflators 2016.csv", header = TRUE, sep = ",", stringsAsFactors=FALSE)
 
 
-# Read in AllSchools.LIDAR.reduced (only area data)
-#AllSchools.LIDAR.reduced.area <- read.csv(file = "C:/Users/hanusnil/Box Sync/AllSchools.LIDAR.reduced - justarea.csv", header = TRUE, sep = ",", stringsAsFactors=FALSE)
-#nrow(AllSchools.LIDAR.reduced.area) # 134,137
-
 # Read in AllSchools.LIDAR.recombined - includes LIDAR estimated and linear regression prediction
 AllSchools.LIDAR.reduced.area <- read.csv(file = "C:/Users/hanusnil/Box Sync/AllSchools.LIDAR.reduced.recombined.12.15.17.csv", header = TRUE, sep = ",", stringsAsFactors=FALSE)
 nrow(AllSchools.LIDAR.reduced.area) # 134,135
@@ -143,8 +137,6 @@ rebates <- read.csv(file = "C:/Users/hanusnil/Box Sync/PV rebates LBNL.csv", hea
 
 # Read in net metering by state
 net.metering <- read.csv(file = "C:/Users/hanusnil/Box Sync/netmeteringpolicies July 2017 wo notes.csv", header = TRUE, sep = ",", stringsAsFactors=FALSE)
-
-
 
 #############################################
 # Process LBNL Data for educational buildings
@@ -193,30 +185,6 @@ lbnl$rog_per_kW <- lbnl$Rebate.or.Grant / lbnl$System.Size
 hist(lbnl$year, main = "Installations over Time - All Customer Segments", xlab = "Year")
 
 
-# need to adjust histograms
-# Histogram of school, non-profit, and government project cost $/KW
-#hist(lbnl[which(lbnl$Customer.Segment == "SCHOOL" & lbnl$Total.Installed.Price > 0 & lbnl$Total.Installed.Price < 1e+05 & lbnl$price.per.kW < 10e+03 & lbnl$year > 2013) ,]$price_per_kW, 
-#    col="red", ylim=c(0,200), breaks = "FD", border =rgb(1,0,0,0.5),
-#   xlab = "$/kW", main = "Project Cost - $/kW")
-# Add non-residential
-#hist(lbnl[which(lbnl$Customer_Segment == "GOV" & lbnl$Total_Installed_Price > 0 & lbnl$Total_Installed_Price < 1e+05 & lbnl$price_per_kW < 10e+03 & lbnl$year > 2013),]$price_per_kW, 
-#    col="blue", add = T, breaks = "FD")
-#hist(lbnl[which(lbnl$Customer_Segment == "NON-PROFIT" & lbnl$Total_Installed_Price > 0 & lbnl$Total_Installed_Price < 1e+05 & lbnl$price_per_kW < 10e+03 & lbnl$year > 2013),]$price_per_kW, 
-#    col="green", add = T, breaks = "FD")
-#legend('topright', c("School", "Government", "Non-Profit"), col = c("red", "blue", "green"), lty=c(1,1,1))
-
-# Histogram of school, non-profit, and government rebate or grant $/KW
-#hist(lbnl[which(lbnl$Customer_Segment == "SCHOOL" & lbnl$Total_Installed_Price > 0 & lbnl$Total_Installed_Price < 1e+05 & lbnl$price_per_kW < 10e+03 & lbnl$year > 2013) ,]$rog_per_kW, 
-#    col="red", ylim=c(0,200), breaks = "FD", border =rgb(1,0,0,0.5),
-#   xlab = "$/kW", main = "Rebate or Grant - $/kW")
-# Add non-residential
-#hist(lbnl[which(lbnl$Customer_Segment == "GOV" & lbnl$Total_Installed_Price > 0 & lbnl$Total_Installed_Price < 1e+05 & lbnl$price_per_kW < 10e+03 & lbnl$year > 2013),]$rog_per_kW, 
-#    col="blue", add = T, breaks = "FD")
-#hist(lbnl[which(lbnl$Customer_Segment == "NON-PROFIT" & lbnl$Total_Installed_Price > 0 & lbnl$Total_Installed_Price < 1e+05 & lbnl$price_per_kW < 10e+03 & lbnl$year > 2013),]$rog_per_kW, 
-#    col="green", add = T, breaks = "FD")
-#legend('topright', c("School", "Government", "Non-Profit"), col = c("red", "blue", "green"), lty=c(1,1,1))
-
-
 # See how many entries we have with this criterion
 nrow(subset(lbnl, year == 2015 & Customer.Segment == "SCHOOL")) # 196
 nrow(subset(lbnl, year == 2015 & Customer.Segment == "NON-PROFIT")) # 208
@@ -257,7 +225,6 @@ nrow(lbnl[which(lbnl$price_per_kW >= 15000),]) # 0
 nrow(lbnl[which(lbnl$price_per_kW <= 1000),]) # 8
 nrow(lbnl[which(is.na(lbnl$price_per_kW)),]) # 380
 
-
 # THROW OUT ANYTHING GREATER THAN $15000 per kW and LESS THAN $1000 per KW
 lbnl <- lbnl[which(lbnl$price_per_kW < 15000),]
 lbnl <- lbnl[which(lbnl$price_per_kW > 1000),] # removes NAs as well
@@ -296,7 +263,6 @@ m + geom_area(stat = "bin", color = "firebrick", fill = "firebrick1") +
   geom_vline(data=lbnl, aes(xintercept=price_per_kW.mu),
              linetype="dashed")
 
-
 m <- ggplot(data = lbnl, aes(rog_per_kW))
 m + geom_area(stat = "bin", color = "dodgerblue4", fill = "dodgerblue") +
   labs(title= "Rebates or Grants for Schools, Government, and Non-Profit", x = "Rebate or Grant ($/kW)") +
@@ -307,26 +273,6 @@ m + geom_area(stat = "bin", color = "dodgerblue4", fill = "dodgerblue") +
   geom_vline(data=lbnl, aes(xintercept=rog_per_kW.mu),
              linetype="dashed")
 
-
-# Look at distributions of price and rebate for the following state:
-# CA, NY, TX, PA compared to US average
-lbnl.keep2 <- c("CA", "NY", "TX", "OH")
-lbnl.trim <- lbnl[lbnl$State %in% lbnl.keep2, ]
-
-# Make a df with the state averages of price and rebate
-mu <- ddply(lbnl.trim, ~State, summarize, 
-            price_per_kW.mu = mean(price_per_kW),
-            rog_per_kW.mu = mean(rog_per_kW))
-
-# not enough projects to make plots accross states
-m <- ggplot(data = lbnl.trim, aes(rog_per_kW))
-m + geom_area(stat = "bin") +
-  facet_grid(State ~ .)
-
-
-
-
-# don't need to run 325 - 880
 
 ##########################################
 # Process marginal and avg emissions data
@@ -392,8 +338,6 @@ reductions_ap2.avg <- data.frame(year = numeric(0), state = character(), lat = n
 
 # US east time zone relative to UTC
 deltaTGMT_NYT <- 5
-
-
 
 ###############################################
 # Define solar functions
@@ -718,32 +662,32 @@ solar.ap2 <- function (r, load, ins, ef_sum){
 
 # Marginal
 # Calculate reductions in emissions due to a 1kW system
-# for (j in min(mef.eas_sum$year):max(mef.eas_sum$year)){
-#  for (i in 1:x){
-#   counter <- paste(i,"of",x, sep = " ")
-#  print(counter)
-# reductions_eas.mar <- rbind(reductions_eas.mar, solar.eas(j, load1[i], insolation[i], ef_sum = mef.eas_sum))  
-#}
-#}
+for (j in min(mef.eas_sum$year):max(mef.eas_sum$year)){
+  for (i in 1:x){
+    counter <- paste(i,"of",x, sep = " ")
+    print(counter)
+    reductions_eas.mar <- rbind(reductions_eas.mar, solar.eas(j, load1[i], insolation[i], ef_sum = mef.eas_sum))  
+  }
+  }
 
 # Write file to .csv
 # Label "_2016" since we are using the latest damages
-# write.table(reductions_eas.mar, file = "C:/Users/hanusnil/Box Sync/Calculated Reductions/reductions_eas_MAR_LMP_2016 - NLH.csv", sep = ",", quote = FALSE, append = FALSE, row.names = FALSE, na="")
+write.table(reductions_eas.mar, file = "C:/Users/hanusnil/Box Sync/Calculated Reductions/reductions_eas_MAR_LMP_2016 - NLH.csv", sep = ",", quote = FALSE, append = FALSE, row.names = FALSE, na="")
 
 
 # Average
 # Calculate reductions in emissions due to a 1kW system
-#for (j in min(af.eas_sum$year):max(af.eas_sum$year)){
-# for (i in 1:x){
-#  counter <- paste(i,"of",x, sep = " ")
-# print(counter)
-# reductions_eas.avg <- rbind(reductions_eas.avg, solar.eas(j, load1[i], insolation[i], ef_sum = af.eas_sum))  
-# }
-# }
+for (j in min(af.eas_sum$year):max(af.eas_sum$year)){
+  for (i in 1:x){
+    counter <- paste(i,"of",x, sep = " ")
+    print(counter)
+    reductions_eas.avg <- rbind(reductions_eas.avg, solar.eas(j, load1[i], insolation[i], ef_sum = af.eas_sum))  
+  }
+  }
 
 # Write file to .csv
 # Label "_2016" since we are using the latest damages
-# write.table(reductions_eas.avg, file = "C:/Users/hanusnil/Box Sync/Calculated Reductions/reductions_eas_AVG_LMP_2016 - NLH.csv", sep = ",", quote = FALSE, append = FALSE, row.names = FALSE, na="")
+write.table(reductions_eas.avg, file = "C:/Users/hanusnil/Box Sync/Calculated Reductions/reductions_eas_AVG_LMP_2016 - NLH.csv", sep = ",", quote = FALSE, append = FALSE, row.names = FALSE, na="")
 
 
 
@@ -753,34 +697,33 @@ solar.ap2 <- function (r, load, ins, ef_sum){
 
 # Marginal
 # Calculate reductions in emissions due to a 1kW system
-# for (j in min(mef.ap2_sum$year):max(mef.ap2_sum$year)){
-# for (i in 1:x){
-# counter <- paste(i,"of",x, sep = " ")
-# print(counter)
-# reductions_ap2.mar <- rbind(reductions_ap2.mar, solar.ap2(j, load1[i], insolation[i], ef_sum = mef.ap2_sum))  
-# }
-# }
+ for (j in min(mef.ap2_sum$year):max(mef.ap2_sum$year)){
+ for (i in 1:x){
+ counter <- paste(i,"of",x, sep = " ")
+ print(counter)
+ reductions_ap2.mar <- rbind(reductions_ap2.mar, solar.ap2(j, load1[i], insolation[i], ef_sum = mef.ap2_sum))  
+}
+}
 
 # Write file to .csv
 # Label "_2016" since we are using the latest damages
-# write.table(reductions_ap2.mar, file = "C:/Users/hanusnil/Box Sync/Calculated Reductions/reductions_ap2_MAR_LMP_2016 - NLH.csv", sep = ",", quote = FALSE, append = FALSE, row.names = FALSE, na="")
+ write.table(reductions_ap2.mar, file = "C:/Users/hanusnil/Box Sync/Calculated Reductions/reductions_ap2_MAR_LMP_2016 - NLH.csv", sep = ",", quote = FALSE, append = FALSE, row.names = FALSE, na="")
 
 
 
 # Average
 # Calculate reductions in emissions due to a 1kW system
-# for (j in min(af.ap2_sum$year):max(af.ap2_sum$year)){
-#  for (i in 1:x){
-#   counter <- paste(i,"of",x, sep = " ")
-#  print(counter)
-#  reductions_ap2.avg <- rbind(reductions_ap2.avg, solar.ap2(j, load1[i], insolation[i], ef_sum = af.ap2_sum))  
-#}
-#}
+ for (j in min(af.ap2_sum$year):max(af.ap2_sum$year)){
+ for (i in 1:x){
+  counter <- paste(i,"of",x, sep = " ")
+  print(counter)
+  reductions_ap2.avg <- rbind(reductions_ap2.avg, solar.ap2(j, load1[i], insolation[i], ef_sum = af.ap2_sum))  
+}
+}
 
 # Write file to .csv
 # Label "_2016" since we are using the latest damages
-# write.table(reductions_ap2.avg, file = "C:/Users/hanusnil/Box Sync/Calculated Reductions/reductions_ap2_AVG_LMP_2016 - NLH.csv", sep = ",", quote = FALSE, append = FALSE, row.names = FALSE, na="")
-
+write.table(reductions_ap2.avg, file = "C:/Users/hanusnil/Box Sync/Calculated Reductions/reductions_ap2_AVG_LMP_2016 - NLH.csv", sep = ",", quote = FALSE, append = FALSE, row.names = FALSE, na="")
 
 
 ############################################
@@ -793,7 +736,6 @@ zip_lookup$lat <- as.numeric(zip_lookup$lat)
 zip_lookup$lon <- as.numeric(zip_lookup$lon)
 
 # Identify the nearest zips from the emissions datasets
-
 
 ## EASIUR
 # Marginal
@@ -838,8 +780,6 @@ zip_lookup.avg.eas <- merge(zip_lookup, locations.avg.eas, by.x = "nearest_tmy",
 write.table(zip_lookup.avg.eas, file = "C:/Users/hanusnil/Box Sync/Zip Lookup and Damages/zip_lookup.avg.eas.csv", sep = ",", quote = FALSE, append = FALSE, row.names = FALSE, na="")
 
 
-
-
 ## AP2
 # Marginal
 locations.mar.ap2 <- read.csv(file = "C:/Users/hanusnil/Box Sync/Calculated Reductions/reductions_ap2_MAR_LMP_2016 - NLH.csv", header = TRUE, sep = ",", stringsAsFactors=FALSE)
@@ -860,8 +800,6 @@ zip_lookup.mar.ap2 <- merge(zip_lookup, locations.mar.ap2, by.x = "nearest_tmy",
 
 # Write file to .csv
 write.table(zip_lookup.mar.ap2, file = "C:/Users/hanusnil/Box Sync/Zip Lookup and Damages/zip_lookup.mar.ap2.csv", sep = ",", quote = FALSE, append = FALSE, row.names = FALSE, na="")
-
-
 
 
 # Marginal
@@ -1571,66 +1509,6 @@ AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$social_net_ben.lmp.dsire.07.an
 AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$social_net_ben.lmp.dsire.02.annual.ITC <- AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$social_net_ben.lmp.dsire.02.ITC/annuity.02
 AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$social_net_ben.ret.dsire.07.annual.ITC <- AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$social_net_ben.ret.dsire.07.ITC/annuity.07
 AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$social_net_ben.ret.dsire.02.annual.ITC <- AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$social_net_ben.ret.dsire.02.ITC/annuity.02
-
-
-
-
-
-
-
-####################################################################
-## Look at the individual annualized per-kilowatt costs and benefits
-####################################################################
-# School - electricity sales at LMP
-# Already captured as "elec.sales.lmp" in $/yr
-
-
-# School - electricity sales at retail
-# Already captured as "elec.sales.ret" in $/yr
-
-# School - offset consumption at retail
-# Already captured as "cost.savings" in $/yr
-
-
-# School - costs (project + maintenance + inverter)
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$project.costs.annual.07 <- (AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$schoolc.dsire - pv.simple(r = disc.07, n = 10, AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$inverter) - pv.annuity(r = disc.07, n = life, AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$maintenance))/annuity.07 # this will be a positive value
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$project.costs.annual.07 <- (AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$schoolc.dsire - pv.simple(r = disc.07, n = 10, AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$inverter) - pv.annuity(r = disc.07, n = life, AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$maintenance))/annuity.07 # this will come out to be the total cost, as a positive value
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$project.costs.annual.07 <- (AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$schoolc.dsire - pv.simple(r = disc.07, n = 10, AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$inverter) - pv.annuity(r = disc.07, n = life, AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$maintenance))/annuity.07 # this will come out to be the total cost, as a positive value
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$project.costs.annual.07 <- (AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$schoolc.dsire - pv.simple(r = disc.07, n = 10, AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$inverter) - pv.annuity(r = disc.07, n = life, AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$maintenance))/annuity.07 # this will come out to be the total cost, as a positive value
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$project.costs.annual.02 <- (AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$schoolc.dsire - pv.simple(r = disc.02, n = 10, AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$inverter) - pv.annuity(r = disc.02, n = life, AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$maintenance))/annuity.02 # this will be a positive value
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$project.costs.annual.02 <- (AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$schoolc.dsire - pv.simple(r = disc.02, n = 10, AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$inverter) - pv.annuity(r = disc.02, n = life, AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$maintenance))/annuity.02 # this will come out to be the total cost, as a positive value
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$project.costs.annual.02 <- (AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$schoolc.dsire - pv.simple(r = disc.02, n = 10, AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$inverter) - pv.annuity(r = disc.02, n = life, AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$maintenance))/annuity.02 # this will come out to be the total cost, as a positive value
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$project.costs.annual.02 <- (AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$schoolc.dsire - pv.simple(r = disc.02, n = 10, AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$inverter) - pv.annuity(r = disc.02, n = life, AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$maintenance))/annuity.02 # this will come out to be the total cost, as a positive value
-
-
-# Social - air benefits
-# Already quantified as "aq_ben" in $/yr
-
-# Social - CO2 benefits
-# Already quantified as "co2_ben" in $/yr
-
-
-# Social - rebates or grants (from dsire) - LMP
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$sc.dsire.annual.07 <- AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$sc.dsire/annuity.07
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$sc.dsire.annual.07 <- AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$sc.dsire/annuity.07
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$sc.dsire.annual.07 <- AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$sc.dsire/annuity.07
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$sc.dsire.annual.07 <- AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$sc.dsire/annuity.07
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$sc.dsire.annual.02 <- AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$sc.dsire/annuity.02
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$sc.dsire.annual.02 <- AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$sc.dsire/annuity.02
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$sc.dsire.annual.02 <- AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$sc.dsire/annuity.02
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$sc.dsire.annual.02 <- AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$sc.dsire/annuity.02
-
-
-# Social - retail cross-subsidy
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$sc.dsire.annual.07.ret <- AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$sc.dsire.ret.07/annuity.07
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$sc.dsire.annual.07.ret <- AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$sc.dsire.ret.07/annuity.07
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$sc.dsire.annual.07.ret <- AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$sc.dsire.ret.07/annuity.07
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$sc.dsire.annual.07.ret <- AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$sc.dsire.ret.07/annuity.07
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$sc.dsire.annual.02.ret <- AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.eas$sc.dsire.ret.02/annuity.02
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$sc.dsire.annual.02.ret <- AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.eas$sc.dsire.ret.02/annuity.02
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$sc.dsire.annual.02.ret <- AllSchools.LIDAR.reduced.area.LIDAR.merge.mar.ap2$sc.dsire.ret.02/annuity.02
-#AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$sc.dsire.annual.02.ret <- AllSchools.LIDAR.reduced.area.LIDAR.merge.avg.ap2$sc.dsire.ret.02/annuity.02
-
 
 
 
